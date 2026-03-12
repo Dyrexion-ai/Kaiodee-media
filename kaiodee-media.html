@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaiodee Media — AV, Sound & Staging | Cape Town</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --deep: #0d0d0d;
+  --panel: #111111;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: rgba(201,168,76,0.12);
+  --white: #f5f0e8;
+  --muted: #777;
+  --border: rgba(201,168,76,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+.cursor {
+  width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .3s, height .3s;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--gold); border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  opacity: .45;
+  transition: width .3s, height .3s, opacity .3s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 48px;
+  background: linear-gradient(to bottom, rgba(8,8,8,.96), transparent);
+  backdrop-filter: blur(6px);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 3px;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .3s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--black); background: var(--gold);
+  border: none; padding: 10px 24px; cursor: none; font-weight: 500;
+  transition: background .3s;
+}
+.nav-cta:hover { background: var(--gold-light); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: none; padding: 4px;
+}
+.hamburger span { width: 24px; height: 1px; background: var(--white); display: block; }
+
+/* MOBILE MENU */
+.mobile-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,8,8,.97); z-index: 850;
+  flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px; letter-spacing: 4px;
+  color: var(--white); text-decoration: none; transition: color .3s;
+}
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-close {
+  position: absolute; top: 28px; right: 48px;
+  background: none; border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--muted); cursor: none; text-transform: uppercase;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 48px 80px; position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(201,168,76,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 15% 80%, rgba(201,168,76,.04) 0%, transparent 60%),
+    linear-gradient(160deg, #0a0a0a 0%, #080808 100%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,.035) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 1s .3s forwards;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 12vw, 156px);
+  line-height: .9; letter-spacing: 2px;
+  opacity: 0; animation: fadeUp 1s .5s forwards;
+}
+.hero-title .gold { color: var(--gold); }
+.hero-bottom {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-top: 44px;
+  opacity: 0; animation: fadeUp 1s .8s forwards;
+}
+.hero-desc {
+  max-width: 400px; font-size: 15px; line-height: 1.75;
+  color: rgba(245,240,232,.58);
+}
+.hero-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+.btn-primary {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--black); background: var(--gold);
+  padding: 15px 36px; text-decoration: none;
+  transition: background .3s, transform .2s;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-outline {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); border: 1px solid var(--border);
+  padding: 15px 36px; text-decoration: none;
+  transition: border-color .3s, background .3s;
+}
+.btn-outline:hover { border-color: var(--gold); background: var(--gold-dim); }
+.hero-scroll {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fadeIn 1s 1.6s forwards;
+}
+.hero-scroll span {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 3px;
+  color: var(--muted); text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s infinite;
+}
+
+/* MARQUEE */
+.marquee-wrap {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 16px 0; overflow: hidden; background: var(--deep);
+}
+.marquee-track {
+  display: flex; gap: 56px;
+  animation: marquee 24s linear infinite; white-space: nowrap;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 19px; letter-spacing: 4px; color: var(--muted);
+  display: flex; align-items: center; gap: 56px; flex-shrink: 0;
+}
+.marquee-item .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+
+/* SECTION COMMONS */
+section { padding: 110px 48px; }
+.sec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1; letter-spacing: 1px; margin-bottom: 20px;
+}
+
+/* SERVICES */
+.services { background: var(--deep); }
+.services-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 72px;
+}
+.services-desc { max-width: 320px; font-size: 14px; line-height: 1.75; color: rgba(245,240,232,.52); }
+.services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.srv-card {
+  background: var(--panel); padding: 44px 38px;
+  position: relative; overflow: hidden; transition: background .4s;
+}
+.srv-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .4s ease;
+}
+.srv-card:hover::before { transform: scaleX(1); }
+.srv-card:hover { background: #151515; }
+.srv-num { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--gold); opacity: .65; margin-bottom: 28px; }
+.srv-icon { font-size: 34px; margin-bottom: 20px; display: block; }
+.srv-name { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 1px; margin-bottom: 14px; }
+.srv-text { font-size: 14px; line-height: 1.72; color: rgba(245,240,232,.5); }
+.srv-list { list-style: none; margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
+.srv-list li {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px; color: var(--muted);
+  display: flex; align-items: center; gap: 10px;
+}
+.srv-list li::before { content: ''; width: 16px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+/* STATS */
+.stats-bar {
+  background: var(--black); padding: 72px 48px;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 2px;
+}
+.stat-card {
+  background: var(--panel); padding: 44px 38px;
+  border-bottom: 2px solid transparent; transition: border-color .3s;
+}
+.stat-card:hover { border-color: var(--gold); }
+.stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 62px; letter-spacing: 2px; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+.stat-suffix { color: var(--white); font-size: 38px; }
+.stat-label { font-size: 13px; color: rgba(245,240,232,.5); }
+
+/* PROCESS */
+.process { background: var(--deep); }
+.process-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; margin-top: 72px; position: relative;
+}
+.process-grid::before {
+  content: ''; position: absolute; top: 31px;
+  left: calc(12.5% + 16px); right: calc(12.5% + 16px);
+  height: 1px; background: var(--border); z-index: 0;
+}
+.proc-step { padding: 0 22px; position: relative; z-index: 1; }
+.proc-num {
+  width: 62px; height: 62px; border: 1px solid var(--border); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gold);
+  background: var(--deep); margin-bottom: 28px;
+  transition: background .3s, border-color .3s;
+}
+.proc-step:hover .proc-num { background: var(--gold-dim); border-color: var(--gold); }
+.proc-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; margin-bottom: 12px; }
+.proc-text { font-size: 13px; line-height: 1.72; color: rgba(245,240,232,.5); }
+
+/* CLIENTS */
+.clients-sec { background: var(--black); padding: 96px 48px; }
+.clients-head { text-align: center; margin-bottom: 60px; }
+.clients-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 2px; }
+.client-tile {
+  background: var(--panel); padding: 30px 20px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; transition: background .3s;
+}
+.client-tile:hover { background: #161616; }
+.client-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); transition: color .3s;
+}
+.client-tile:hover .client-name { color: var(--gold); }
+
+/* TESTIMONIALS */
+.testimonials { background: var(--deep); }
+.testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 72px; }
+.testi-card { background: var(--panel); padding: 44px 38px; transition: background .3s; }
+.testi-card:hover { background: #151515; }
+.quote-mark { font-family: 'Bebas Neue', sans-serif; font-size: 72px; color: var(--gold); opacity: .14; line-height: .8; margin-bottom: 20px; }
+.testi-text { font-size: 14px; line-height: 1.82; color: rgba(245,240,232,.72); font-style: italic; margin-bottom: 28px; }
+.testi-author { display: flex; align-items: center; gap: 14px; }
+.author-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--gold-dim); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: var(--gold); flex-shrink: 0;
+}
+.author-name { font-size: 14px; font-weight: 500; }
+.author-role { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
+
+/* CTA */
+.cta-band {
+  background: var(--gold); padding: 96px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.cta-band::before {
+  content: 'KAIODEE'; position: absolute; right: -30px; top: 50%; transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif; font-size: 190px; color: rgba(0,0,0,.06);
+  letter-spacing: 10px; pointer-events: none; white-space: nowrap;
+}
+.cta-band .sec-label { color: rgba(0,0,0,.45); }
+.cta-band .sec-title { color: var(--black); margin-bottom: 0; }
+.cta-btns { display: flex; gap: 14px; flex-shrink: 0; }
+.btn-dark {
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--white); background: var(--black); padding: 15px 36px; text-decoration: none;
+  transition: background .3s;
+}
+.btn-dark:hover { background: #1c1c1c; }
+.btn-bare {
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--black); border: 1px solid rgba(0,0,0,.3);
+  padding: 15px 36px; text-decoration: none;
+  transition: border-color .3s, background .3s;
+}
+.btn-bare:hover { border-color: var(--black); background: rgba(0,0,0,.08); }
+
+/* CONTACT */
+.contact-sec { background: var(--black); }
+.contact-layout { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 72px; margin-top: 72px; }
+.contact-divider { background: var(--border); }
+.contact-info { display: flex; flex-direction: column; gap: 36px; }
+.ci-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.ci-val { font-size: 15px; color: rgba(245,240,232,.72); line-height: 1.6; }
+.ci-val a { color: rgba(245,240,232,.72); text-decoration: none; transition: color .3s; }
+.ci-val a:hover { color: var(--gold); }
+.contact-form { display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 7px; }
+.form-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.form-input, .form-select, .form-textarea {
+  background: var(--panel); border: 1px solid var(--border);
+  color: var(--white); padding: 13px 16px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none; width: 100%; transition: border-color .3s; appearance: none;
+}
+.form-input::placeholder { color: rgba(119,119,119,.5); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+.form-textarea { height: 116px; resize: vertical; }
+.form-select option { background: #111; }
+.form-submit {
+  align-self: flex-start;
+  background: var(--gold); color: var(--black);
+  border: none; padding: 15px 36px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  cursor: none; font-weight: 500; transition: background .3s, transform .2s;
+}
+.form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+/* FOOTER */
+footer { background: var(--deep); border-top: 1px solid var(--border); padding: 64px 48px 36px; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 56px; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; color: var(--white); text-decoration: none; }
+.footer-logo span { color: var(--gold); }
+.footer-tagline { font-size: 13px; color: var(--muted); margin-top: 10px; max-width: 240px; line-height: 1.6; }
+.footer-col h4 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.footer-col a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .3s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid var(--border); }
+.footer-copy { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px; color: rgba(119,119,119,.5); }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .3s; }
+.footer-links a:hover { color: var(--gold); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+@keyframes scrollPulse { 0%,100%{opacity:.3;} 50%{opacity:1;} }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  nav { padding: 18px 28px; }
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 80px 28px; }
+  .hero { padding: 0 28px 72px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .stats-bar { grid-template-columns: 1fr 1fr; padding: 60px 28px; }
+  .process-grid { grid-template-columns: 1fr 1fr; gap: 44px; }
+  .process-grid::before { display: none; }
+  .clients-grid { grid-template-columns: repeat(3,1fr); }
+  .testi-grid { grid-template-columns: 1fr 1fr; }
+  .cta-band { flex-direction: column; gap: 36px; align-items: flex-start; }
+  .contact-layout { grid-template-columns: 1fr; }
+  .contact-divider { display: none; }
+  .footer-top { flex-wrap: wrap; gap: 36px; }
+  .clients-sec { padding: 80px 28px; }
+}
+@media (max-width: 640px) {
+  nav { padding: 16px 20px; }
+  section { padding: 60px 20px; }
+  .hero { padding: 0 20px 60px; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 28px; }
+  .hero-actions { align-items: flex-start; }
+  .services-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr 1fr; padding: 52px 20px; }
+  .process-grid { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(2,1fr); }
+  .testi-grid { grid-template-columns: 1fr; }
+  .services-head { flex-direction: column; gap: 20px; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-top { flex-direction: column; }
+  .cta-band { padding: 60px 20px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  .clients-sec { padding: 60px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMenu()">&#x2715; Close</button>
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#process" onclick="toggleMenu()">Process</a>
+  <a href="#clients" onclick="toggleMenu()">Clients</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">KAIODEE<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get a Quote</button>
+  <button class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <p class="hero-tag">AV &middot; Sound &middot; Staging &middot; Cape Town, South Africa</p>
+  <h1 class="hero-title">We Set The<br><span class="gold">Stage.</span></h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">Kaiodee Media delivers world-class audiovisual, sound engineering, and staging for corporate conferences, government events, and entertainment productions across South Africa.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary">Explore Services</a>
+      <a href="#contact" class="btn-outline">Request a Quote</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Audio Visual Production <span class="dot"></span></span>
+    <span class="marquee-item">Live Sound Engineering <span class="dot"></span></span>
+    <span class="marquee-item">Stage Design &amp; Build <span class="dot"></span></span>
+    <span class="marquee-item">Corporate Conferences <span class="dot"></span></span>
+    <span class="marquee-item">Government Events <span class="dot"></span></span>
+    <span class="marquee-item">Music &amp; Entertainment <span class="dot"></span></span>
+    <span class="marquee-item">LED Screens &amp; Displays <span class="dot"></span></span>
+    <span class="marquee-item">Lighting Design <span class="dot"></span></span>
+    <span class="marquee-item">Audio Visual Production <span class="dot"></span></span>
+    <span class="marquee-item">Live Sound Engineering <span class="dot"></span></span>
+    <span class="marquee-item">Stage Design &amp; Build <span class="dot"></span></span>
+    <span class="marquee-item">Corporate Conferences <span class="dot"></span></span>
+    <span class="marquee-item">Government Events <span class="dot"></span></span>
+    <span class="marquee-item">Music &amp; Entertainment <span class="dot"></span></span>
+    <span class="marquee-item">LED Screens &amp; Displays <span class="dot"></span></span>
+    <span class="marquee-item">Lighting Design <span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-head reveal">
+    <div>
+      <p class="sec-label">What We Do</p>
+      <h2 class="sec-title">Our Core Services</h2>
+    </div>
+    <p class="services-desc">From intimate boardroom setups to 5,000-seat conference halls &mdash; we bring the technology, you bring the vision.</p>
+  </div>
+  <div class="services-grid">
+    <div class="srv-card reveal">
+      <p class="srv-num">01</p>
+      <span class="srv-icon">&#127916;</span>
+      <h3 class="srv-name">Audio Visual</h3>
+      <p class="srv-text">Complete AV integration for conferences, presentations, and live events. Crystal-clear projection, seamless switching, and full technical support on the day.</p>
+      <ul class="srv-list">
+        <li>Projection &amp; LED Screens</li>
+        <li>Video Switching &amp; Playback</li>
+        <li>Live Streaming Integration</li>
+        <li>Content Management</li>
+      </ul>
+    </div>
+    <div class="srv-card reveal">
+      <p class="srv-num">02</p>
+      <span class="srv-icon">&#127897;</span>
+      <h3 class="srv-name">Sound</h3>
+      <p class="srv-text">Professional sound engineering from room acoustics to full PA systems. Every word heard, every note felt &mdash; with zero compromise on clarity.</p>
+      <ul class="srv-list">
+        <li>PA System Design &amp; Install</li>
+        <li>Live Mixing &amp; Engineering</li>
+        <li>Wireless Microphone Systems</li>
+        <li>Acoustic Consultation</li>
+      </ul>
+    </div>
+    <div class="srv-card reveal">
+      <p class="srv-num">03</p>
+      <span class="srv-icon">&#127959;</span>
+      <h3 class="srv-name">Staging</h3>
+      <p class="srv-text">Custom stage structures, risers, and platforms engineered for safety and impact. We build the physical space that commands attention.</p>
+      <ul class="srv-list">
+        <li>Stage Design &amp; Fabrication</li>
+        <li>Trussing &amp; Rigging</li>
+        <li>Podium &amp; Riser Systems</li>
+        <li>Set Dressing &amp; Backdrop</li>
+      </ul>
+    </div>
+    <div class="srv-card reveal">
+      <p class="srv-num">04</p>
+      <span class="srv-icon">&#128161;</span>
+      <h3 class="srv-name">Lighting</h3>
+      <p class="srv-text">Theatrical and architectural lighting that transforms spaces. From wash lighting to dynamic show-calling &mdash; we set the mood precisely.</p>
+      <ul class="srv-list">
+        <li>Stage &amp; Event Lighting</li>
+        <li>LED Moving Heads</li>
+        <li>Ambient &amp; Architectural</li>
+        <li>DMX Programming</li>
+      </ul>
+    </div>
+    <div class="srv-card reveal">
+      <p class="srv-num">05</p>
+      <span class="srv-icon">&#128225;</span>
+      <h3 class="srv-name">Conference Tech</h3>
+      <p class="srv-text">Delegate management systems, translation booths, voting systems, and hybrid solutions for high-level summits and conventions.</p>
+      <ul class="srv-list">
+        <li>Simultaneous Interpretation</li>
+        <li>Delegate Voting Systems</li>
+        <li>Hybrid Event Solutions</li>
+        <li>Teleprompter Services</li>
+      </ul>
+    </div>
+    <div class="srv-card reveal">
+      <p class="srv-num">06</p>
+      <span class="srv-icon">&#127917;</span>
+      <h3 class="srv-name">Full Production</h3>
+      <p class="srv-text">End-to-end event production management. We handle the entire technical scope so your team focuses on the agenda, not the logistics.</p>
+      <ul class="srv-list">
+        <li>Technical Direction</li>
+        <li>Crew &amp; Staffing</li>
+        <li>Logistics &amp; Transport</li>
+        <li>Post-Event Reports</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-card reveal">
+    <div class="stat-num">250<span class="stat-suffix">+</span></div>
+    <div class="stat-label">Events Delivered</div>
+  </div>
+  <div class="stat-card reveal">
+    <div class="stat-num">12<span class="stat-suffix">yrs</span></div>
+    <div class="stat-label">Industry Experience</div>
+  </div>
+  <div class="stat-card reveal">
+    <div class="stat-num">40<span class="stat-suffix">+</span></div>
+    <div class="stat-label">Expert Crew Members</div>
+  </div>
+  <div class="stat-card reveal">
+    <div class="stat-num">98<span class="stat-suffix">%</span></div>
+    <div class="stat-label">Client Satisfaction</div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="reveal">
+    <p class="sec-label">How We Work</p>
+    <h2 class="sec-title">Our Process</h2>
+  </div>
+  <div class="process-grid">
+    <div class="proc-step reveal">
+      <div class="proc-num">01</div>
+      <h3 class="proc-title">Brief &amp; Consult</h3>
+      <p class="proc-text">We start by understanding your event goals, venue, audience size, and technical requirements in full detail.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">02</div>
+      <h3 class="proc-title">Design &amp; Plan</h3>
+      <p class="proc-text">Our technical team develops a full AV, staging, and production plan tailored to your event and budget.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">03</div>
+      <h3 class="proc-title">Setup &amp; Rehearse</h3>
+      <p class="proc-text">We arrive early, build the complete technical environment, and run full rehearsals with your team.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">04</div>
+      <h3 class="proc-title">Execute &amp; Support</h3>
+      <p class="proc-text">Flawless live execution with our crew on-site throughout, plus post-event breakdown and debrief.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients-sec" id="clients">
+  <div class="clients-head reveal">
+    <p class="sec-label">Trusted By</p>
+    <h2 class="sec-title">Our Clients</h2>
+  </div>
+  <div class="clients-grid reveal">
+    <div class="client-tile"><span class="client-name">Nedbank</span></div>
+    <div class="client-tile"><span class="client-name">Standard Bank</span></div>
+    <div class="client-tile"><span class="client-name">Naspers</span></div>
+    <div class="client-tile"><span class="client-name">GCIS</span></div>
+    <div class="client-tile"><span class="client-name">City of Cape Town</span></div>
+    <div class="client-tile"><span class="client-name">Vodacom SA</span></div>
+    <div class="client-tile"><span class="client-name">Shoprite Group</span></div>
+    <div class="client-tile"><span class="client-name">Sasol</span></div>
+    <div class="client-tile"><span class="client-name">MTN South Africa</span></div>
+    <div class="client-tile"><span class="client-name">Discovery Health</span></div>
+    <div class="client-tile"><span class="client-name">Old Mutual</span></div>
+    <div class="client-tile"><span class="client-name">Deloitte SA</span></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="reveal">
+    <p class="sec-label">What Clients Say</p>
+    <h2 class="sec-title">Testimonials</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="quote-mark">"</div>
+      <p class="testi-text">Kaiodee set up our entire annual conference at the CTICC and the results were incredible. Sound coverage across all three breakaway rooms was flawless &mdash; delegates were genuinely blown away.</p>
+      <div class="testi-author">
+        <div class="author-av">ND</div>
+        <div>
+          <div class="author-name">Nompumelelo Dlamini</div>
+          <div class="author-role">Events Manager &middot; Nedbank</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="quote-mark">"</div>
+      <p class="testi-text">We hired Kaiodee for a government summit in Pretoria with over 800 delegates. Their staging, simultaneous interpretation setup, and AV execution were world-class from start to finish.</p>
+      <div class="testi-author">
+        <div class="author-av">TM</div>
+        <div>
+          <div class="author-name">Thabo Motsepe</div>
+          <div class="author-role">Chief Protocol Officer &middot; GCIS</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="quote-mark">"</div>
+      <p class="testi-text">Our product launch in Sandton needed a stage that made a statement. Kaiodee delivered beyond expectations &mdash; the LED wall alone had guests stopping to take photos before the event even started.</p>
+      <div class="testi-author">
+        <div class="author-av">SK</div>
+        <div>
+          <div class="author-name">Sibongile Khumalo</div>
+          <div class="author-role">Brand Director &middot; Vodacom SA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-band">
+  <div>
+    <p class="sec-label">Ready to Begin?</p>
+    <h2 class="sec-title">Let's Build<br>Something Great.</h2>
+  </div>
+  <div class="cta-btns">
+    <a href="#contact" class="btn-dark">Get a Quote</a>
+    <a href="tel:+27824342840" class="btn-bare">Call Us Now</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-sec" id="contact">
+  <div class="reveal">
+    <p class="sec-label">Get In Touch</p>
+    <h2 class="sec-title">Contact Us</h2>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-info reveal">
+      <div>
+        <p class="ci-label">Phone</p>
+        <p class="ci-val"><a href="tel:+27824342840">+27 82 434 2840</a></p>
+      </div>
+      <div>
+        <p class="ci-label">General Enquiries</p>
+        <p class="ci-val"><a href="mailto:info@kaiodeemedia.co.za">info@kaiodeemedia.co.za</a></p>
+      </div>
+      <div>
+        <p class="ci-label">Direct</p>
+        <p class="ci-val"><a href="mailto:zweli@kaiodeemedia.co.za">zweli@kaiodeemedia.co.za</a></p>
+      </div>
+      <div>
+        <p class="ci-label">Based In</p>
+        <p class="ci-val">Cape Town, South Africa<br>Also serving Johannesburg &amp; Pretoria</p>
+      </div>
+      <div>
+        <p class="ci-label">Operating Hours</p>
+        <p class="ci-val">Mon &ndash; Fri: 8am &ndash; 6pm<br>Weekends: By Appointment</p>
+      </div>
+    </div>
+    <div class="contact-divider"></div>
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Doe">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="john@company.com">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Service Needed</label>
+          <select class="form-select">
+            <option value="">Select a service</option>
+            <option>Audio Visual</option>
+            <option>Sound Engineering</option>
+            <option>Staging</option>
+            <option>Lighting</option>
+            <option>Conference Tech</option>
+            <option>Full Production</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Event Date</label>
+          <input type="date" class="form-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tell Us About Your Event</label>
+        <textarea class="form-textarea" placeholder="Venue, expected attendance, event type..."></textarea>
+      </div>
+      <button class="form-submit" id="submitBtn">Send Message &#x2192;</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#" class="footer-logo">KAIODEE<span>.</span></a>
+      <p class="footer-tagline">Precision AV, sound &amp; staging for events that demand excellence &mdash; Cape Town, Johannesburg &amp; Pretoria.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Audio Visual</a></li>
+        <li><a href="#services">Sound</a></li>
+        <li><a href="#services">Staging</a></li>
+        <li><a href="#services">Lighting</a></li>
+        <li><a href="#services">Conference Tech</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#process">Our Process</a></li>
+        <li><a href="#clients">Clients</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+27824342840">+27 82 434 2840</a></li>
+        <li><a href="mailto:info@kaiodeemedia.co.za">info@kaiodeemedia.co.za</a></li>
+        <li><a href="mailto:zweli@kaiodeemedia.co.za">zweli@kaiodeemedia.co.za</a></li>
+        <li><a href="#">Cape Town, South Africa</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 2025 Kaiodee Media. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="mailto:info@kaiodeemedia.co.za">Email Us</a>
+      <a href="tel:+27824342840">Call Us</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+(function tick() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.13; ry += (my - ry) * 0.13;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a, button, input, select, textarea').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    cursor.style.width = '18px'; cursor.style.height = '18px';
+    ring.style.width = '52px'; ring.style.height = '52px'; ring.style.opacity = '.25';
+  });
+  el.addEventListener('mouseleave', function() {
+    cursor.style.width = '10px'; cursor.style.height = '10px';
+    ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '.45';
+  });
+});
+
+// MOBILE MENU
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// SCROLL REVEAL
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) {
+      setTimeout(function() { e.target.classList.add('visible'); }, i * 90);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    var t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// FORM
+document.getElementById('submitBtn').addEventListener('click', function() {
+  var btn = this;
+  btn.textContent = 'Message Sent!';
+  btn.style.background = '#3d9e6e';
+  btn.style.color = '#fff';
+  setTimeout(function() {
+    btn.textContent = 'Send Message \u2192';
+    btn.style.background = ''; btn.style.color = '';
+  }, 3000);
+});
+</script>
+</body>
+</html>
